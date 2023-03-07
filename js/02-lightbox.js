@@ -1,45 +1,31 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
+// Change code below this line
 
-const galleryEl = document.querySelector('.gallery');
-const imgMarkup = createGallery(galleryItems);
-galleryEl.insertAdjacentHTML('beforeend', imgMarkup);
+const gallery = document.querySelector(".gallery");
 
-function createGallery(gallery) {
-  return gallery.map(({ preview, original, description }) => {
-    return `
-      <li>
-        <a class="gallery__link" href="${original}">
-          <img
-            class="gallery__image"
-            src="${preview}"
-            data-source="${original}"
-            alt="${description}"
-          />
-        </a>
-      </li>
-    `;
-  }).join('');
-}
-
-galleryEl.addEventListener('click', onGalleryClick);
-
-function onGalleryClick(event) {
-  event.preventDefault();
-  const { target } = event;
-
-  if (target.nodeName !== 'IMG') {
-    return;
-  }
-
-  const originalImageURL = target.dataset.source;
-  const instance = basicLightbox.create(
-    `<img src="${originalImageURL}" width="800" height="600">`
-  );
-
-  instance.show();
-}
-
-const galleryLightBox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
+const createGallery = () => {
+  const markup = galleryItems
+    .map(
+      ({ preview, original, description }) =>
+        `<a class="gallery__item" href= ${original}>
+                <img
+                    class="gallery__image"
+                    // src=${preview}
+                    // alt=${description}
+                />
+                </a>`
+    )
+    .join("");
+  gallery.insertAdjacentHTML("beforeend", markup);
+};
+createGallery();
+let galleryLightBox = new SimpleLightbox(".gallery a", {
+  showCounter: false,
+  captions: true,
+  captionsData: "alt",
   captionDelay: 250,
+});
+galleryLightBox.on("shown.simplelightbox", function () {
+  const caption = document.querySelector(".sl-caption.pos-bottom");
+  caption.style.textAlign = "center";
 });
